@@ -3,6 +3,8 @@ import 'package:manga/Constants/Constants.dart';
 
 
 
+
+
 class MangaCard extends StatelessWidget {
   final String mangaImg, mangaTitle, mangaUrlList;
 
@@ -15,7 +17,7 @@ class MangaCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 250,
       width: 130,
       child: GestureDetector(

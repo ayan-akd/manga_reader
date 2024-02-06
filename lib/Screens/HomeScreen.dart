@@ -3,6 +3,8 @@ import 'package:manga/Components/MangaCard.dart';
 import 'package:manga/Constants/Constants.dart';
 import 'package:manga/Widgets/BotNavItem.dart';
 import 'package:web_scraper/web_scraper.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -22,16 +24,47 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  // void fetchManga() async {
+  //   final webScraper = WebScraper(Constants.baseUrl);
+  //   if (await webScraper.loadWebPage('/wwww')) {
+  //     mangaList = webScraper.getElement(
+  //       'div.container-main-left > div.panel-content-homepage > div > a > img',
+  //       ['src', 'alt'],
+  //     );
+  //     print(mangaList);
+  //     setState(() {
+  //       mangaLoaded = true;
+  //     });
+  //   }
+  // }
+
   void fetchManga() async {
-    final webScraper = WebScraper(Constants.baseUrl);
-    if (await webScraper.loadWebPage('/wwww')) {
-      mangaList = webScraper.getElement(
-        'div.container-main-left > div.panel-content-homepage > div > a > img',
-        ['src', 'alt'],
-      );
-      // print(mangaList);
+    try {
+      // Make a GET request to your backend API endpoint
+      final response = await http.get(Uri.parse('${Constants.baseUrl}/manga'));
+
+      if (response.statusCode == 200) {
+        // If the server returns a 200 OK response, parse the JSON data
+        final jsonData = json.decode(response.body);
+        setState(() {
+          mangaList = List<Map<String, dynamic>>.from(
+            (jsonData as List<dynamic>).map((item) => {
+                  'title': item['title'],
+                  'attributes': item['attributes'] as Map<String, dynamic>,
+                }),
+          );
+          // print(mangaList);
+          mangaLoaded = true;
+        });
+      } else {
+        // If the server did not return a 200 OK response, throw an exception.
+        throw Exception('Failed to load manga');
+      }
+    } catch (error) {
+      // Handle errors
+      print('Error during manga fetch: $error');
       setState(() {
-        mangaLoaded = true;
+        mangaLoaded = false;
       });
     }
   }

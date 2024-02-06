@@ -19,7 +19,7 @@ class MangaCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 250,
-      width: 130,
+      width: 110,
       child: GestureDetector(
         onTap: () {
           print(mangaUrlList);

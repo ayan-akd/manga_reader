@@ -24,50 +24,50 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  // void fetchManga() async {
-  //   final webScraper = WebScraper(Constants.baseUrl);
-  //   if (await webScraper.loadWebPage('/wwww')) {
-  //     mangaList = webScraper.getElement(
-  //       'div.container-main-left > div.panel-content-homepage > div > a > img',
-  //       ['src', 'alt'],
-  //     );
-  //     print(mangaList);
-  //     setState(() {
-  //       mangaLoaded = true;
-  //     });
-  //   }
-  // }
-
   void fetchManga() async {
-    try {
-      // Make a GET request to your backend API endpoint
-      final response = await http.get(Uri.parse('${Constants.baseUrl}/manga'));
-
-      if (response.statusCode == 200) {
-        // If the server returns a 200 OK response, parse the JSON data
-        final jsonData = json.decode(response.body);
-        setState(() {
-          mangaList = List<Map<String, dynamic>>.from(
-            (jsonData as List<dynamic>).map((item) => {
-                  'title': item['title'],
-                  'attributes': item['attributes'] as Map<String, dynamic>,
-                }),
-          );
-          // print(mangaList);
-          mangaLoaded = true;
-        });
-      } else {
-        // If the server did not return a 200 OK response, throw an exception.
-        throw Exception('Failed to load manga');
-      }
-    } catch (error) {
-      // Handle errors
-      print('Error during manga fetch: $error');
+    final webScraper = WebScraper(Constants.baseUrl);
+    if (await webScraper.loadWebPage('/wwww')) {
+      mangaList = webScraper.getElement(
+        'div.container-main-left > div.panel-content-homepage > div > a > img',
+        ['src', 'alt'],
+      );
+      // print(mangaList);
       setState(() {
-        mangaLoaded = false;
+        mangaLoaded = true;
       });
     }
   }
+
+  // void fetchManga() async {
+  //   try {
+  //     // Make a GET request to your backend API endpoint
+  //     final response = await http.get(Uri.parse('${Constants.baseUrl}/manga'));
+
+  //     if (response.statusCode == 200) {
+  //       // If the server returns a 200 OK response, parse the JSON data
+  //       final jsonData = json.decode(response.body);
+  //       setState(() {
+  //         mangaList = List<Map<String, dynamic>>.from(
+  //           (jsonData as List<dynamic>).map((item) => {
+  //                 'title': item['title'],
+  //                 'attributes': item['attributes'] as Map<String, dynamic>,
+  //               }),
+  //         );
+  //         // print(mangaList);
+  //         mangaLoaded = true;
+  //       });
+  //     } else {
+  //       // If the server did not return a 200 OK response, throw an exception.
+  //       throw Exception('Failed to load manga');
+  //     }
+  //   } catch (error) {
+  //     // Handle errors
+  //     print('Error during manga fetch: $error');
+  //     setState(() {
+  //       mangaLoaded = false;
+  //     });
+  //   }
+  // }
 
   @override
   void initState() {
@@ -109,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     for (int i = 0; i < mangaList.length; i++)
                       Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(3.3),
                         child: MangaCard(
                             mangaImg: mangaList[i]['attributes']['src'],
                             mangaTitle: mangaList[i]['attributes']['alt'],

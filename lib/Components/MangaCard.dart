@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:manga/Constants/Constants.dart';
-
-
-
-
+import 'package:manga/Screens/DetailScreen.dart';
 
 class MangaCard extends StatelessWidget {
   final String mangaImg, mangaTitle, mangaUrlList;
@@ -22,18 +19,17 @@ class MangaCard extends StatelessWidget {
       width: 110,
       child: GestureDetector(
         onTap: () {
-          print(mangaUrlList);
-
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) => DetailScreen(
-          //       mangaImg: mangaImg,
-          //       mangaLink: mangaUrlList,
-          //       mangaTitle: mangaTitle,
-          //     ),
-          //   ),
-          // );
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => DetailScreen(
+                mangaImg: mangaImg,
+                mangaLink: mangaUrlList,
+                mangaTitle: mangaTitle,
+                key: const Key('manga_detail_screen'),
+              ),
+            ),
+          );
         },
         child: Column(
           children: [

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:manga/Screens/ContentScreen.dart';
+import 'package:manga/Screens/DetailScreen.dart';
 import 'package:manga/Screens/HomeScreen.dart';
 
 void main() {
@@ -12,9 +14,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Manga Reader',
-      home: HomeScreen()
-    );
+        debugShowCheckedModeBanner: false,
+        title: 'Manga Reader',
+        home: HomeScreen()
+        // home: ContentScreen()
+        );
   }
 }

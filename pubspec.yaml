@@ -38,6 +38,7 @@ dependencies:
   web_scraper: ^0.1.4
   http: ^0.13.6
   image_network: ^2.5.4+1
+  dio: ^4.0.0
 
 dev_dependencies:
   flutter_test:

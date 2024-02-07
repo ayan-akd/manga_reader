@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:manga/Components/MangaCard.dart';
+import 'package:manga/Components/homeScreen/MangaList.dart';
 import 'package:manga/Constants/Constants.dart';
 import 'package:manga/Widgets/BotNavItem.dart';
 import 'package:web_scraper/web_scraper.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+// import 'package:http/http.dart' as http;
+// import 'dart:convert';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -17,6 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int selectedNavIndex = 0;
   bool mangaLoaded = false;
   late List<Map<String, dynamic>> mangaList;
+  late List<Map<String, dynamic>> mangaUrlList;
 
   void navBarTap(int index) {
     setState(() {
@@ -31,7 +33,10 @@ class _HomeScreenState extends State<HomeScreen> {
         'div.container-main-left > div.panel-content-homepage > div > a > img',
         ['src', 'alt'],
       );
-      // print(mangaList);
+      mangaUrlList = webScraper.getElement(
+        'div.container-main-left > div.panel-content-homepage > div > a',
+        ['href'],
+      );
       setState(() {
         mangaLoaded = true;
       });
@@ -84,40 +89,10 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Constants.darkGray,
       ),
       body: mangaLoaded
-          ? Container(
-              height: screenSize.height,
-              width: double.infinity,
-              color: Constants.black,
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: Wrap(
-                  runSpacing: 10,
-                  spacing: 5,
-                  children: [
-                    Container(
-                      width: double.infinity,
-                      height: 30,
-                      padding: const EdgeInsets.only(left: 20, top: 10),
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        "${mangaList.length} Mangas Found",
-                        style: const TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    for (int i = 0; i < mangaList.length; i++)
-                      Padding(
-                        padding: const EdgeInsets.all(3.3),
-                        child: MangaCard(
-                            mangaImg: mangaList[i]['attributes']['src'],
-                            mangaTitle: mangaList[i]['attributes']['alt'],
-                            mangaUrlList: mangaList[i]['attributes']['src']),
-                      )
-                  ],
-                ),
-              ),
+          ? MangaList(
+              key: UniqueKey(),
+              mangaList: mangaList,
+              mangaUrlList: mangaUrlList,
             )
           : const Center(
               child: CircularProgressIndicator(),

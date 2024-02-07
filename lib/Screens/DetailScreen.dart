@@ -21,41 +21,63 @@ class DetailScreen extends StatefulWidget {
 }
 
 class _DetailScreenState extends State<DetailScreen> {
-  late String mangaGenres, mangaStatus, mangaAuthor, mangaDesc;
+  late String mangaGenres = "", mangaStatus, mangaAuthor, mangaDesc;
   // // mangaLink = https://m.manganelo.com/manga-gc121022
   late List<Map<String, dynamic>> mangaDetail;
   late List<Map<String, dynamic>> mangaDescList;
   late List<Map<String, dynamic>> mangaChapters;
+  late List<Map<String, dynamic>> authorElement;
+  late List<Map<String, dynamic>> catagoriesElement;
 
   bool dataFetch = false;
 
   void getMangaInfos() async {
-    String tempBaseUrl = widget.mangaLink.split(".com")[0] + ".com";
-    String tempRoute = widget.mangaLink.split(".com")[1];
+    // String tempBaseUrl = widget.mangaLink.split(".com")[0] + ".com";
+    // String tempRoute = widget.mangaLink.split(".com")[1];
 
-    final webScraper = WebScraper(tempBaseUrl);
+    final webScraper = WebScraper(Constants.baseUrl);
 
-    if (await webScraper.loadWebPage(tempRoute)) {
-      mangaDetail = webScraper.getElement(
-        'div.panel-story-info > div.story-info-right > table > tbody > tr > td.table-value',
-        [],
-      );
+    // if (await webScraper.loadWebPage(widget.mangaLink)) {
+    //   mangaDetail = webScraper.getElement(
+    //     'div.panel-story-info > div.story-info-right > table > tbody > tr > td.table-value',
+    //     [],
+    //   );
 
-      mangaDescList = webScraper.getElement(
-        'div.panel-story-info > div.panel-story-info-description',
-        [],
-      );
+    //   mangaDescList = webScraper.getElement(
+    //     'div.panel-story-info > div.panel-story-info-description',
+    //     [],
+    //   );
 
+    //   mangaChapters = webScraper.getElement(
+    //     'div.panel-story-chapter-list > ul > li > a',
+    //     ['href'],
+    //   );
+    // }
+
+    // mangaGenres = mangaDetail[3]['title'].toString().trim();
+    // mangaStatus = mangaDetail[2]['title'].toString().trim();
+    // mangaAuthor = mangaDetail[1]['title'].toString().trim();
+    // mangaDesc = mangaDescList[0]['title'].toString().trim();
+
+    if (await webScraper.loadWebPage(widget.mangaLink)) {
+      authorElement = webScraper.getElement('div.author > span', []);
+      catagoriesElement =
+          webScraper.getElement('div.categories > ul.nomargpad > li > a', []);
+
+      mangaDescList = webScraper.getElement('p.description', []);
       mangaChapters = webScraper.getElement(
-        'div.panel-story-chapter-list > ul > li > a',
+        'ul.chapter-list > li > a',
         ['href'],
       );
     }
-
-    mangaGenres = mangaDetail[3]['title'].toString().trim();
-    mangaStatus = mangaDetail[2]['title'].toString().trim();
-    mangaAuthor = mangaDetail[1]['title'].toString().trim();
-    mangaDesc = mangaDescList[0]['title'].toString().trim();
+    mangaAuthor = authorElement[1]['title'];
+    var categories = catagoriesElement
+        .map((element) => element['title']?.trim() ?? '')
+        .toList();
+    mangaGenres = categories.join(', ');
+    if (mangaDescList.isNotEmpty) {
+      mangaDesc = mangaDescList.first['title'] ?? 'N/A';
+    }
 
     setState(() {
       dataFetch = true;
@@ -89,8 +111,8 @@ class _DetailScreenState extends State<DetailScreen> {
                     MangaInfo(
                       key: const Key('info_screen'),
                       mangaImg: widget.mangaImg,
-                      mangaStatus: mangaStatus,
                       mangaAuthor: mangaAuthor,
+                      mangaStatus: "Ongoing",
                     ),
                     // const HorDivider(),
                     MangaDesc(
@@ -99,7 +121,6 @@ class _DetailScreenState extends State<DetailScreen> {
                       key: const Key('manga_des'),
                     ),
                     // const HorDivider(),
-                    // // mangaChapters - chapters
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

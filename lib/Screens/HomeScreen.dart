@@ -28,13 +28,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void fetchManga() async {
     final webScraper = WebScraper(Constants.baseUrl);
-    if (await webScraper.loadWebPage('/wwww')) {
+    if (await webScraper.loadWebPage('/')) {
       mangaList = webScraper.getElement(
-        'div.container-main-left > div.panel-content-homepage > div > a > img',
-        ['src', 'alt'],
-      );
+          'section.container.nomargpad #content .updates-item .holder .leftside a img',
+          ['src', 'alt']);
+
       mangaUrlList = webScraper.getElement(
-        'div.container-main-left > div.panel-content-homepage > div > a',
+        'section.container.nomargpad #content .updates-item .holder .leftside a',
         ['href'],
       );
       setState(() {
@@ -85,10 +85,10 @@ class _HomeScreenState extends State<HomeScreen> {
     Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Manga Reader'),
+        title: const Text('Comic Reader'),
         backgroundColor: Constants.darkGray,
       ),
-      body: mangaLoaded
+      body: mangaLoaded && mangaList.isNotEmpty && mangaUrlList.isNotEmpty
           ? MangaList(
               key: UniqueKey(),
               mangaList: mangaList,

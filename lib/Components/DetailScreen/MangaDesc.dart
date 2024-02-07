@@ -55,7 +55,7 @@ class _MangaDescState extends State<MangaDesc> {
             ),
             const Divider(),
             Text(
-              widget.mangaDesc.substring(13).trim(),
+              widget.mangaDesc.trim(),
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 17,

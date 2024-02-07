@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Manga Reader',
+        title: 'Comic Reader',
         home: HomeScreen()
         // home: ContentScreen()
         );

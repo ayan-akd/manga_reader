@@ -14,16 +14,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Manga Reader',
-      // home: HomeScreen()
-      home: DetailScreen(
-          key: Key('info_screen'),
-          mangaImg:
-              "https://readermc.org/images/thumbnails/Reincarnator%20(Manhwa).webp",
-          mangaTitle: "Reincarnator (Manhwa)",
-          mangaLink: "/manga/Reincarnator-%2528Manhwa%2529-VA48"),
-      // home: ContentScreen()
-    );
+        debugShowCheckedModeBanner: false,
+        title: 'Comic Reader',
+        home: HomeScreen()
+        // home: ContentScreen()
+        );
   }
 }

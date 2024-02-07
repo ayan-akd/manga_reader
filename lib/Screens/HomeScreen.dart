@@ -32,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
       mangaList = webScraper.getElement(
           'section.container.nomargpad #content .updates-item .holder .leftside a img',
           ['src', 'alt']);
-          
+
       mangaUrlList = webScraper.getElement(
         'section.container.nomargpad #content .updates-item .holder .leftside a',
         ['href'],
@@ -85,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Manga Reader'),
+        title: const Text('Comic Reader'),
         backgroundColor: Constants.darkGray,
       ),
       body: mangaLoaded && mangaList.isNotEmpty && mangaUrlList.isNotEmpty

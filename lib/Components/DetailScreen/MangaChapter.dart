@@ -16,21 +16,36 @@ class MangaChapters extends StatelessWidget {
         itemCount: mangaChapters.length,
         physics: const BouncingScrollPhysics(),
         itemBuilder: (context, index) {
+          final chapter = mangaChapters[index];
+          final chapterNumber = chapter['title'].toString().split(' ')[1];
+          final chapterLink = chapter['attributes']!['href'].toString().trim();
           return SizedBox(
             height: 50,
             width: double.infinity,
             child: Material(
               color: Constants.lightGray,
               child: InkWell(
-                onTap: () => const ContentScreen(),
+                onTap: () {
+                  // Handle onTap, navigate to content screen with chapter link
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ContentScreen(
+                              chapterLink: chapterLink,
+                              chapterNumber: chapterNumber,
+                            )),
+                  );
+                },
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      mangaChapters[index]['title'],
-                      style: const TextStyle(color: Colors.white),
-                    ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        chapterNumber,
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ],
                   ),
                 ),
               ),

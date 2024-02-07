@@ -21,11 +21,13 @@ class DetailScreen extends StatefulWidget {
 }
 
 class _DetailScreenState extends State<DetailScreen> {
-  late String mangaGenres, mangaStatus, mangaAuthor, mangaDesc;
+  late String mangaGenres = "", mangaStatus, mangaAuthor, mangaDesc;
   // // mangaLink = https://m.manganelo.com/manga-gc121022
   late List<Map<String, dynamic>> mangaDetail;
   late List<Map<String, dynamic>> mangaDescList;
   late List<Map<String, dynamic>> mangaChapters;
+  late List<Map<String, dynamic>> authorElement;
+  late List<Map<String, dynamic>> catagoriesElement;
 
   bool dataFetch = false;
 
@@ -57,6 +59,25 @@ class _DetailScreenState extends State<DetailScreen> {
     // mangaAuthor = mangaDetail[1]['title'].toString().trim();
     // mangaDesc = mangaDescList[0]['title'].toString().trim();
 
+    if (await webScraper.loadWebPage(widget.mangaLink)) {
+      authorElement = webScraper.getElement('div.author > span', []);
+      catagoriesElement =
+          webScraper.getElement('div.categories > ul.nomargpad > li > a', []);
+
+      mangaDescList = webScraper.getElement('p.description', []);
+      mangaChapters = webScraper.getElement(
+        'ul.chapter-list > li > a',
+        ['href'],
+      );
+    }
+    mangaAuthor = authorElement[1]['title'];
+    var categories = catagoriesElement
+        .map((element) => element['title']?.trim() ?? '')
+        .toList();
+    mangaGenres = categories.join(', ');
+    if (mangaDescList.isNotEmpty) {
+      mangaDesc = mangaDescList.first['title'] ?? 'N/A';
+    }
 
     setState(() {
       dataFetch = true;
@@ -90,47 +111,46 @@ class _DetailScreenState extends State<DetailScreen> {
                     MangaInfo(
                       key: const Key('info_screen'),
                       mangaImg: widget.mangaImg,
-                      mangaAuthor: "mangaAuthor",
-                      mangaStatus: "mangaStatus",
+                      mangaAuthor: mangaAuthor,
+                      mangaStatus: "Ongoing",
                     ),
                     // const HorDivider(),
-                    // MangaDesc(
-                    //   mangaDesc: mangaDesc,
-                    //   mangaGenres: mangaGenres,
-                    //   key: const Key('manga_des'),
-                    // ),
+                    MangaDesc(
+                      mangaDesc: mangaDesc,
+                      mangaGenres: mangaGenres,
+                      key: const Key('manga_des'),
+                    ),
                     // const HorDivider(),
-                    // // mangaChapters - chapters
-                    // Column(
-                    //   crossAxisAlignment: CrossAxisAlignment.start,
-                    //   children: [
-                    //     Padding(
-                    //       padding: const EdgeInsets.only(
-                    //           top: 16.0, left: 8.0), // Adding margin on top
-                    //       child: Text(
-                    //         "Chapters - ${mangaChapters.length}",
-                    //         style: const TextStyle(
-                    //           color: Colors.white,
-                    //           fontWeight: FontWeight.bold,
-                    //           fontSize: 17,
-                    //         ),
-                    //         textAlign:
-                    //             TextAlign.start, // Align text to the left
-                    //       ),
-                    //     ),
-                    //     Padding(
-                    //       padding: const EdgeInsets.only(top: 8.0),
-                    //       child: MangaChapters(
-                    //         mangaChapters: mangaChapters,
-                    //         key: const Key('chapter_screen'),
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
-                    // MangaChapters(
-                    //   mangaChapters: mangaChapters,
-                    //   key: const Key('chapter_screen'),
-                    // )
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              top: 16.0, left: 8.0), // Adding margin on top
+                          child: Text(
+                            "Chapters - ${mangaChapters.length}",
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 17,
+                            ),
+                            textAlign:
+                                TextAlign.start, // Align text to the left
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: MangaChapters(
+                            mangaChapters: mangaChapters,
+                            key: const Key('chapter_screen'),
+                          ),
+                        ),
+                      ],
+                    ),
+                    MangaChapters(
+                      mangaChapters: mangaChapters,
+                      key: const Key('chapter_screen'),
+                    )
                   ],
                 ),
               ),
